@@ -61,16 +61,16 @@ def fetch_comments_of(mid):
     allComment = []
     mid = mid
     max_id = None
-    currentPage = 0  # 当前的页码
-    hasMoreComments = True
+    current_page = 0  # 当前的页码
+    has_more_comments = True
 
-    while hasMoreComments:
+    while has_more_comments:
         time.sleep(1)
 
         url = make_url(max_id, mid)
 
         response = requests.get(url=url, cookies=cookie)
-        print response.text
+        print(response.text)
         rsp = json.loads(response.text)
 
         # 获取该评论的基本信息
@@ -78,24 +78,24 @@ def fetch_comments_of(mid):
         comments = rsp['data']['data']  # 下级评论
         max = rsp['data']['max']  # 最大页数
         ok = rsp['ok']  # ok 码
-        hasMoreComments = currentPage < max & ok == 1  # 是否有更多评论
+        has_more_comments = current_page < max & ok == 1  # 是否有更多评论
 
         for c in comments:  # 遍历评论
-            hasMoreThan2Comments = c['more_info_type'] == 1  # 该评论下是否有多于两条的评论
-            commentId = c['id']  # 获取该评论的id
-            if hasMoreThan2Comments:
+            has_gt_2_pages = c['more_info_type'] == 1  # 该评论下是否有多于两条的评论
+            comment_id = c['id']  # 获取该评论的id
+            if has_gt_2_pages:
                 slow_down()
-                replays = fetch_comments_of_comment(commentId)
+                replays = fetch_comments_of_comment(comment_id)
                 c['comments'] = []
                 c['comments'] = replays
 
-            replayCount = len(c['comments']) if c['comments'] != False else 0
-            print "微博评论Id: %s, 下共有 %s 条评论" % (str(commentId), str(replayCount))
+            replay_count = len(c['comments']) if c['comments'] != False else 0
+            print("微博评论Id: %s, 下共有 %s 条评论" % (str(comment_id), str(replay_count)))
 
         allComment.extend(comments)
-        print "-------------- current page:%s --------------" % (str(currentPage))
+        print("-------------- current page:%s --------------" % (str(current_page)))
 
-        currentPage += 1  # 页码自增
+        current_page += 1  # 页码自增
 
     return allComment
 

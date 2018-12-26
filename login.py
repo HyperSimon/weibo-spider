@@ -32,9 +32,11 @@ def fetch_cookie(username, password):
     response = requests.post(url=url, data=data, headers=headers)
     cookie = response.cookies.get_dict()
     files.save('cookie.txt', json.dumps(cookie))  # 存储cookie
-    print "存储 cookie 到本地完成"
+    print("存储 cookie 到本地完成")
     return cookie
 
 
-fetch_cookie("13048807364", "1236578simon")
-
+account = files.read('account.txt').split(',')
+account_name = account[0]
+account_password = account[1]
+fetch_cookie(account_name, account_password)

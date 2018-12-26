@@ -16,12 +16,12 @@ def insertValue():
 
 def query():
     for item in collection.find():
-        print item
+        print(item)
 
 
 def aa():
     name = 'wangzhen'
-    print name
+    print(name)
 
 
 def save(filename, contents):
@@ -41,20 +41,9 @@ def read(filename):
 
 name = None
 if name != 0:
-    print "name not equal 0"
+    print("name not equal 0")
 
 name = 0
-if name == None:
-    print "name equal 0"
-
-names = []
-chinese = ['aa', 'bb', 'cc']
-japanese = ['aa', 'bb', 'cc']
-names.extend(chinese)
-names.extend(japanese)
-print names
-
-print '%s 我叫白小飞 %s' % ('Python', 'Tab')
 
 commentId = 1111
 url = "https://m.weibo.cn/comments/hotFlowChild?" \
@@ -62,13 +51,11 @@ url = "https://m.weibo.cn/comments/hotFlowChild?" \
       "max_id=0&" \
       "max_id_type=0" % (str(commentId))
 
-print url
+# a = [11, 11, 11]
+# for index, i in enumerate(a):
+#     print(i)
+#
+a = [{'value': 2, 'age': 3}, {'value': 3, 'age': 4}]
 
-a = False
-print a != False
-a = []
-print a != False
-a = ['a', 'b']
-print a != False
-
-print random.randint(0, 1000) / 1000.0
+filter({'value': 2}, a)
+print()

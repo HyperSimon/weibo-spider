@@ -1,5 +1,6 @@
 # coding=utf-8
 
+
 def save(filename, contents):
     fh = open(filename, 'w+')
     fh.write(contents)
