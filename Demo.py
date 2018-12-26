@@ -3,6 +3,8 @@ import random
 
 from pymongo import MongoClient
 
+import files
+
 client = MongoClient('localhost', 27017)
 
 # 连接所需数据库,test为数据库名
@@ -57,5 +59,4 @@ url = "https://m.weibo.cn/comments/hotFlowChild?" \
 #
 a = [{'value': 2, 'age': 3}, {'value': 3, 'age': 4}]
 
-filter({'value': 2}, a)
-print()
+print(files.read('./property/account.txt').split(',')[0])

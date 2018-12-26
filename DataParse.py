@@ -31,8 +31,7 @@ r = {}
 for user in poster:
     user_id = user['id']
     user_name = user['screen_name']
-    if user_id not in user_ids:
-        user_ids.append(user_id)
+    if user_name not in r:
         r[user_name] = 1
     else:
         r[user_name] = r[user_name] + 1

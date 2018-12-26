@@ -4,8 +4,6 @@ import json
 import requests
 from pymongo import MongoClient
 
-import mblog as blog
-
 # 数据库的连接
 import files
 
@@ -13,7 +11,7 @@ client = MongoClient('localhost', 27017)
 db = client.panda
 table_chengshi = db.chengshi
 
-cookie = json.loads(files.read('cookie.txt'))  # 获取cookie
+cookie = json.loads(files.read('./property/cookie.txt'))  # 获取cookie
 
 
 def get_weibo_data(since_id):
@@ -30,15 +28,20 @@ def get_weibo_data(since_id):
     return data
 
 
+buffer = []
+buffer_size = 100
+
+
 def parse_data():
     sinceId = read('sinceid.txt')
-    for i in range(500):
-        print("正在读取第 " + str(i + 1) + " 页微博内容"),
+    rg = 300
+    for i in range(rg):
+        print("正在读取第{0}页微博内容".format(i + 1))
 
         data = get_weibo_data(sinceId)
         cards = data['cards']
 
-        for card in cards:
+        for index, card in enumerate(cards):
             if "show_type" in card:
                 card_group = card['card_group']
                 # for cg in card_group:
@@ -50,7 +53,8 @@ def parse_data():
                 #     mblog['liked'] = liked
                 #     cg['mblog'] = mblog
 
-                table_chengshi.insert(card_group)
+                #  table_chengshi.insert(card_group) # use buffer instand
+                buffer.extend(card_group)
             else:
                 print("不包含 show_type")
 
@@ -59,7 +63,15 @@ def parse_data():
         else:
             break
 
-    save("sinceid.txt", str(sinceId))
+        if len(buffer) >= buffer_size or i == rg - 1:
+            # insert buffer to db and clear buffer
+            print("当前 buffer:{0}, index:{1}".format(len(buffer), i))
+
+            table_chengshi.insert(buffer)
+            buffer.clear()
+
+            # log since id and save
+            save("sinceid.txt", str(sinceId))
 
 
 def save(filename, contents):
