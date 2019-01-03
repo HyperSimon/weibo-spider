@@ -1,6 +1,5 @@
 # coding=utf-8
 import json
-import operator
 
 from pymongo import MongoClient
 
