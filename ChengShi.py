@@ -34,7 +34,7 @@ buffer_size = 100
 
 def parse_data():
     sinceId = read('sinceid.txt')
-    rg = 300
+    rg = 200
     for i in range(rg):
         print("正在读取第{0}页微博内容".format(i + 1))
 
@@ -67,7 +67,18 @@ def parse_data():
             # insert buffer to db and clear buffer
             print("当前 buffer:{0}, index:{1}".format(len(buffer), i))
 
-            table_chengshi.insert(buffer)
+            need_insert = []
+            for b in buffer:
+                value = table_chengshi.find_one({'mblog.id': b['mblog']['id']})
+                if value is not None:
+                    table_chengshi.update({'mblog.id': value['mblog']['id']}, {'$set': {"mblog": b['mblog']}})
+                else:
+                    need_insert.append(b)
+
+            if len(need_insert) > 0:
+                table_chengshi.insert_many(need_insert)
+            print("更新%d条数据，新增%d条数据" % (len(buffer) - len(need_insert), len(need_insert)))
+
             buffer.clear()
 
             # log since id and save
