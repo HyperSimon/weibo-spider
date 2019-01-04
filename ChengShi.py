@@ -34,7 +34,7 @@ buffer_size = 100
 
 def parse_data():
     sinceId = read('sinceid.txt')
-    rg = 200
+    rg = 500
     for i in range(rg):
         print("正在读取第{0}页微博内容".format(i + 1))
 

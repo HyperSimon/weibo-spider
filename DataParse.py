@@ -37,8 +37,18 @@ for user in poster:
 
 l = []
 for i in r:
-    l.append({'username': i, 'post_times': r[i]})
+    l.append({'username': i, 'post_time': r[i]})
 
-l.sort(key=lambda x: x['post_times'], reverse=True)
+l.sort(key=lambda x: x['post_time'], reverse=True)
 
 print(json.dumps(l, sort_keys=True, indent=2, ensure_ascii=False))
+
+size = 0
+for data in table_chengshi.find():
+    size += 1
+
+# total = 0
+# for i in user_in_group:
+#     total += r[i]
+#
+# print("超话共%d条数据，群里的亲妈共发%d条,占比%f%s" % (size, total, (total / size) * 100, "%"))
