@@ -4,6 +4,7 @@ import json
 from pymongo import MongoClient
 
 # 数据库的连接
+import files
 from files import save
 
 client = MongoClient('localhost', 27017)
@@ -42,6 +43,12 @@ for i in r:
 l.sort(key=lambda x: x['post_time'], reverse=True)
 
 print(json.dumps(l, sort_keys=True, indent=2, ensure_ascii=False))
+
+val = ""
+for i in l:
+    val += "%s\n" % json.dumps(i, ensure_ascii=False)
+
+files.save("property/user.json", val)
 
 size = 0
 for data in table_chengshi.find():
