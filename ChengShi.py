@@ -1,6 +1,7 @@
 # coding=utf-8
 import json
 
+
 import requests
 from pymongo import MongoClient
 
@@ -13,6 +14,20 @@ table_chengshi = db.chengshi
 
 cookie = json.loads(files.read('./property/cookie.txt'))  # 获取cookie
 
+headers = {
+    "content-type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+    "Host": "passport.weibo.cn",
+    "Connection": "keep-alive",
+    "Content-Length": "339",
+    "Origin": "https://passport.weibo.cn",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Mobile Safari/537.36",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Accept": "*/*",
+    "Referer": "https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=https%3A%2F%2Fm.weibo.cn%2Fdetail%2F4306305752058972",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7,ja;q=0.6",
+}
+
 
 def get_weibo_data(since_id):
     url = "https://m.weibo.cn/api/container/getIndex" \
@@ -21,10 +36,18 @@ def get_weibo_data(since_id):
           "&luicode=20000174" \
           "&since_id=" + str(since_id)
 
-    response = requests.get(url)
-    rsp = json.loads(response.content)
+    data = []
+    try:
+        response = requests.get(url=url, headers=headers, timeout=2)
+        print(response.content)
+        rsp = json.loads(response.content)
 
-    data = rsp['data']
+        data = rsp['data']
+    # except  as e:
+    #     print(e)
+    except Exception:
+        print("异常")
+
     return data
 
 
@@ -39,6 +62,8 @@ def parse_data():
         print("正在读取第{0}页微博内容".format(i + 1))
 
         data = get_weibo_data(sinceId)
+        if len(data) < 1:
+            break
         cards = data['cards']
 
         for index, card in enumerate(cards):

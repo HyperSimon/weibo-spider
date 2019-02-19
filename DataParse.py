@@ -23,8 +23,10 @@ def update_last_blog_id():
 
 poster = []
 for data in table_chengshi.find():
-    user = data['mblog']['user']
-    poster.append(user)
+    mblog = data['mblog']
+    if mblog['created_at'].startswith("2018") and 'title' in mblog:
+        user = data['mblog']['user']
+        poster.append(user)
 
 user_ids = []
 r = {}
@@ -42,13 +44,20 @@ for i in r:
 
 l.sort(key=lambda x: x['post_time'], reverse=True)
 
-print(json.dumps(l, sort_keys=True, indent=2, ensure_ascii=False))
+# print(json.dumps(l, sort_keys=True, indent=2, ensure_ascii=False))
 
 val = ""
-for i in l:
+sort = ""
+total = 0
+for index, i in enumerate(l):
+    print(i)
+    sort += "No.%d @%s; 发帖量%s\n" % (index + 1, i['username'], i['post_time'])
     val += "%s\n" % json.dumps(i, ensure_ascii=False)
+    total += i['post_time']
 
+print(total)
 files.save("property/user.json", val)
+files.save("property/sort.txt", sort)
 
 size = 0
 for data in table_chengshi.find():
